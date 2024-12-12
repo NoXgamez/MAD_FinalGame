@@ -75,4 +75,21 @@ public class PlayersDataSource {
         player.setScore(cursor.getInt(2));
         return player;
     }
+
+    public List<Player> getTop5Scores() {
+        List<Player> topScores = new ArrayList<Player>();
+
+        // Query to get the top 5 players sorted by score in descending order
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_PLAYERS,
+                allColumns, null, null, null, null, MySQLiteHelper.COLUMN_SCORE + " DESC", "5");
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Player player = cursorToPlayer(cursor);
+            topScores.add(player);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return topScores;
+    }
 }

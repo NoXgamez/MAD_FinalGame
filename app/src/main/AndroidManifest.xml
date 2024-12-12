@@ -13,6 +13,11 @@
         android:theme="@style/Theme.MAD_FinalGame"
         tools:targetApi="31">
         <activity
+            android:name=".TopScoresActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.MAD_FinalGame" />
+        <activity
             android:name=".EnterPlayerActivity"
             android:exported="false"
             android:screenOrientation="landscape"

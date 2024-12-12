@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int currentStep = 0;
     private int score = 0;
+    private int sequenceLength = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         Random random = new Random();
 
         // Create a sequence of 4 buttons with possible repeats
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < sequenceLength; i++) {
             int index = random.nextInt(buttons.size()); // Randomly pick a button
             sequence.add(buttons.get(index)); // Add it to the sequence
         }
@@ -124,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }, delay);
                 }
-            }, delay * i); // Add a delay between each button highlight
+            }, (delay * i) + delay); // Add a delay between each button highlight
+            setButtonsClickable(true);
         }
     }
 
@@ -167,16 +169,19 @@ public class MainActivity extends AppCompatActivity {
                 updateScore(); // Update the score display
                 highlightButton(pressedButton);  // Show the ripple effect for the pressed button
                 if (currentStep == sequence.size()) {
-                    // Sequence completed, show the start button again
-                    startButton.setVisibility(View.VISIBLE);
-                    currentStep = 0; // Reset the sequence
-
                     // Disable the buttons again after sequence completion
                     setButtonsClickable(false);
+
+                    // Sequence completed, show the start button again
+                    sequenceLength += 2; // Make the sequence longer by 2
+                    generateRandomSequence(); // Make a new sequence
+                    startSequenceHighlight();
+                    currentStep = 0; // Reset the sequence
                 }
             } else {
                 // Wrong button pressed, reset the game
                 currentStep = 0; // Reset the sequence progress
+                sequenceLength = 4; // Reset the sequence length
                 setButtonsClickable(false); // Disable buttons
                 startButton.setVisibility(View.VISIBLE); // Show the start button again
                 Intent intent = new Intent(this, EnterPlayerActivity.class);

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class EnterPlayerActivity extends AppCompatActivity {
 
     private EditText nameEditText;
+    private TextView txtScore;
     int score;
 
     private PlayersDataSource dataSource;
@@ -21,6 +23,7 @@ public class EnterPlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_enter_player);
 
         nameEditText = findViewById(R.id.nameEditText);
+        txtScore = findViewById(R.id.txtScore);
 
         dataSource = new PlayersDataSource(this);
         dataSource.open();
@@ -28,6 +31,7 @@ public class EnterPlayerActivity extends AppCompatActivity {
         // Retrieve the score from the Intent
         Intent intent = getIntent();
         score = intent.getIntExtra("score", 0); // Get score passed from previous activity
+        txtScore.setText("Score: " + score);
     }
 
     public void playAgain(View view) {
@@ -57,7 +61,7 @@ public class EnterPlayerActivity extends AppCompatActivity {
         // Clear input fields
         nameEditText.setText("");
 
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, TopScoresActivity.class));
     }
 
     @Override
