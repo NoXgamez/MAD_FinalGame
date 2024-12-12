@@ -1,12 +1,14 @@
 package com.example.mad_finalgame;
+
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Button;
-import android.os.Handler;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -16,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private Button startButton;
     private List<ImageButton> buttons;
     private List<ImageButton> sequence;
+
+    private int currentStep = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,15 +40,50 @@ public class MainActivity extends AppCompatActivity {
         buttons.add(redButton);
         buttons.add(blueButton);
 
+        // Set initial visibility for buttons (make them unclickable initially)
+        setButtonsClickable(false);
+
         // Set an OnClickListener on the start button
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                startButton.setVisibility(View.GONE);
+
                 // Generate a random sequence
                 generateRandomSequence();
 
                 // Start the sequence highlighting when the center button is pressed
                 startSequenceHighlight();
+
+                // After the sequence is ready, enable the buttons
+                setButtonsClickable(true);
+            }
+        });
+
+        // Set OnClickListeners for each button
+        yellowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkButton(yellowButton);
+            }
+        });
+        greenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkButton(greenButton);
+            }
+        });
+        redButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkButton(redButton);
+            }
+        });
+        blueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkButton(blueButton);
             }
         });
     }
@@ -101,5 +140,38 @@ public class MainActivity extends AppCompatActivity {
     private void resetButton(ImageButton button) {
         // No need to reset the button's background as it's handled by the ripple effect
         button.setPressed(false);
+    }
+
+    private void setButtonsClickable(boolean clickable) {
+        // Set each button's clickable state based on the parameter
+        yellowButton.setClickable(clickable);
+        greenButton.setClickable(clickable);
+        redButton.setClickable(clickable);
+        blueButton.setClickable(clickable);
+    }
+
+    private void checkButton(ImageButton pressedButton) {
+        if (currentStep < sequence.size()) {
+            ImageButton targetButton = sequence.get(currentStep);
+
+            if (pressedButton == targetButton) {
+                // Correct button pressed, progress to the next step
+                currentStep++;
+                highlightButton(pressedButton);  // Show the ripple effect for the pressed button
+                if (currentStep == sequence.size()) {
+                    // Sequence completed, show the start button again
+                    startButton.setVisibility(View.VISIBLE);
+                    currentStep = 0; // Reset the sequence
+
+                    // Disable the buttons again after sequence completion
+                    setButtonsClickable(false);
+                }
+            } else {
+                // Wrong button pressed, reset the game
+                currentStep = 0; // Reset the sequence progress
+                setButtonsClickable(false); // Disable buttons
+                startButton.setVisibility(View.VISIBLE); // Show the start button again
+            }
+        }
     }
 }
