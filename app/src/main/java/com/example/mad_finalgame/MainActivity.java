@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,10 +17,12 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageButton yellowButton, greenButton, redButton, blueButton;
     private Button startButton;
+    private TextView scoreTextView;
     private List<ImageButton> buttons;
     private List<ImageButton> sequence;
 
     private int currentStep = 0;
+    private int score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         redButton = findViewById(R.id.red);
         blueButton = findViewById(R.id.blue);
         startButton = findViewById(R.id.startButton);
+        scoreTextView = findViewById(R.id.scoreTextView);
 
         // Add buttons to a list
         buttons = new ArrayList<>();
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 startButton.setVisibility(View.GONE);
+                updateScore(); // Update the score display
 
                 // Generate a random sequence
                 generateRandomSequence();
@@ -157,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
             if (pressedButton == targetButton) {
                 // Correct button pressed, progress to the next step
                 currentStep++;
+                score++; // Increase the score
+                updateScore(); // Update the score display
                 highlightButton(pressedButton);  // Show the ripple effect for the pressed button
                 if (currentStep == sequence.size()) {
                     // Sequence completed, show the start button again
@@ -171,7 +178,14 @@ public class MainActivity extends AppCompatActivity {
                 currentStep = 0; // Reset the sequence progress
                 setButtonsClickable(false); // Disable buttons
                 startButton.setVisibility(View.VISIBLE); // Show the start button again
+                score = 0; // Reset score
+                updateScore(); // Update the score display
             }
         }
+    }
+
+    private void updateScore() {
+        // Update the score display
+        scoreTextView.setText("Score: " + score);
     }
 }
