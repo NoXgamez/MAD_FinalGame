@@ -1,5 +1,6 @@
 package com.example.mad_finalgame;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -178,8 +179,9 @@ public class MainActivity extends AppCompatActivity {
                 currentStep = 0; // Reset the sequence progress
                 setButtonsClickable(false); // Disable buttons
                 startButton.setVisibility(View.VISIBLE); // Show the start button again
-                score = 0; // Reset score
-                updateScore(); // Update the score display
+                Intent intent = new Intent(this, EnterPlayerActivity.class);
+                intent.putExtra("score", score); // Pass score to the next activity
+                startActivity(intent);
             }
         }
     }
